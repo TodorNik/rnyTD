@@ -46,6 +46,7 @@ Aside from the jumper and classic library, the following files were written by m
 1. main.lua: Main file for the game
 2. enemy.lua: Information and functions of the enemy entity
 3. player.lua: Information and functions of the player entity
+4. conf.lua: Configuration files for the game
 
 ### Prerequisites
 - Lua
@@ -54,7 +55,12 @@ Aside from the jumper and classic library, the following files were written by m
 
 ### Installation
 
-A. Raw code start
+A. Only LÖVE required 
+  1. Download Rny_Tower_Defense.love
+  2. Double-click the file
+  3. Play
+
+B. Raw code start
   1. Clone the repo
     ```sh
     git clone https://github.com/TodorNik/rnyTD
@@ -78,8 +84,7 @@ A. Raw code start
 - [] Add abilities to towers
 - [] Create more levels
 - [] Add boss stages at the end of each level
-- [] Animate enemies better
-- [] Add runnable .love file
+- [] Animate enemies
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
