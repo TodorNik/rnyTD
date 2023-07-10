@@ -82,6 +82,7 @@ B. Raw code start
 ## Roadmap
 
 - [] Add abilities to towers
+- [] Visual update to the whole game (color scheme takes precedence)
 - [] Create more levels
 - [] Add boss stages at the end of each level
 - [] Animate enemies and fix a few enemy overlaps
