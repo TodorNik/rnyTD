@@ -84,7 +84,7 @@ B. Raw code start
 - [] Add abilities to towers
 - [] Create more levels
 - [] Add boss stages at the end of each level
-- [] Animate enemies
+- [] Animate enemies and fix a few enemy overlaps
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
