@@ -12,110 +12,25 @@ function love.load()
    Object = require "classic"
    require "tower"
    require "enemy"
-
+   require "level"
+   tiled = Level(level)
+   tilemap = tiled:convertTilemap(tiled.tilemap)
+   for i,tile in ipairs(tilemap) do
+      print(tile[i])      
+   end
    --Initializes enemy and tower lists
    listOfEnemies = {Enemy(1,3,1), Enemy(2,3,1),Enemy(3,3,1),Enemy(4,3,1)}
    listOfTowers = {}
 
-   --Following "if" function helps switch level maps and sets start/end point for enemy paths
-   if level == 1 then
-      --first level map
-      tilemap = {
-      {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3},
-      {3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}}
-
-      startx, starty = 3, 2
-      endx, endy = 18, 12
-      offsetx = 0
-      offsety = 25
-
-      elseif level == 2 then
-         --second level map
-         tilemap = {
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3},-- 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 1, 3, 3},-- 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-         {3, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 3, 3},-- 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-         {3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3},-- 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-         {3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-         {3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},-- 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}}
-
-         startx, starty = 3, 2
-         endx, endy = 16, 15
-         offsetx = 25
-         offsety = 0
-
-         elseif level == 3 then
-         --third level map
-         tilemap = {
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-         {3, 1, 0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-         {3, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3},
-         {3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3},
-         {3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3},
-         {3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},-- 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}}
-
-         startx, starty = 3, 2
-         endx, endy = 16, 16
-         offsetx = 0
-         offsety = 25
-      end
-
       walkable = 0
       -- Creates a grid object
       grid = Grid(tilemap)
-      -- Creates a pathfinder object using Jump Point Search
+      --Creates a pathfinder object using Jump Point Search
       myFinder = Pathfinder(grid, 'BFS', walkable)
-      
       --creates an end goal to defend from enemies
       goal ={
-         x = endx * 25 + offsetx,
-         y = endy * 25 + offsety,
+         x = tiled.endX * 25 + tiled.offsetX,
+         y = tiled.endY * 25 + tiled.offsetY,
          health = 3
       }
       -- Calculates the path, and its length
@@ -148,9 +63,13 @@ end
 
 function love.draw()
    --draws the goal, its health, and current money
-   love.graphics.setBackgroundColor( 0, 0, 250, 5)
-   love.graphics.circle("line", goal.x, goal.y, 22)
-   love.graphics.print ("3/ "..goal.health, goal.x - 12, goal.y - 7)
+   love.graphics.setBackgroundColor( 0.7, 1, 0.4)
+   gimg = love.graphics.newImage("goal.png")
+
+   love.graphics.setColor(1,1,1)
+   love.graphics.draw(gimg, goal.x - 25, goal.y - 30)
+   love.graphics.setColor(0,0,0)
+   love.graphics.print ("3/ "..goal.health, goal.x - 6, goal.y - 7)
    love.graphics.print ("Money "..money, 13, 9)
 
    --draws enemies
@@ -160,16 +79,16 @@ function love.draw()
 
    --draws towers
    for i,v in ipairs(listOfTowers) do
-      love.graphics.setColor(0,0,0)
-      v:draw()
+      love.graphics.setColor(1,1,1)
+      v:draw(-1)
    end
-   
+
    for i=1,#tilemap do
       for j=1,#tilemap[i] do
           --If the value on row i, column j equals 1
          if tilemap[i][j] == 1 then
               --Draw the rectangle use i and j to position the rectangle.
-              love.graphics.setColor(150,75,0)
+              love.graphics.setColor(0.5,0.5,0.5)
               love.graphics.rectangle("fill", j * 25, i * 25, 25, 25)
               love.graphics.setColor(0,0,0)
               love.graphics.rectangle("line", j * 25, i * 25, 25, 25)
@@ -179,17 +98,18 @@ function love.draw()
             --Draws an empty rectangle, where tower will be drawn
             love.graphics.setColor(0,0,0)
               love.graphics.rectangle("line", j * 25, i * 25, 25, 25)
-              love.graphics.setColor(150,75,0)
+               
          end
       end
    end
+   Level:draw()
 end
    
 function checkWaypoint(e,eindx)
    --loads a temporary variable with the values of the node enemy is moving towards
    temp = path[e.waypoint]
 
-   if temp.x == endx and temp.y == endy then
+   if temp.x == tiled.endX and temp.y == tiled.endY then
       --intercepts the enemy that reaches the end goal, dealing damage (might be redundant)
       goal.health = goal.health - 1
       table.remove(listOfEnemies, eindx)
@@ -222,7 +142,7 @@ function love.mousepressed(x, y, button, istouch)
       --checks if player has enough money and which button is pressed to create a tower
       if button == 1 and money >= 100 then
          table.insert(listOfTowers, Tower(temp.a * 25,temp.b * 25, 1))
-         money = money - 100
+         --money = money - 100
          tilemap[temp.b][temp.a] = 2
       elseif button == 2 and money >= 200 then
          table.insert(listOfTowers, Tower(temp.a * 25, temp.b * 25, 2))
@@ -279,8 +199,7 @@ end
 
 function calculatePath()
    -- Calculates the path, and its length
-   path, length = myFinder:getPath(startx, starty, endx, endy)
-   print(endx,endy)
+   path, length = myFinder:getPath(tiled.startX, tiled.startY, tiled.endX, tiled.endY)
 end
 
 --after distance has been confirmed, target starts ticking off the timer and tower deals damage
@@ -310,13 +229,16 @@ function waveSwitcher()
       calculatePath()
       if wave == 2 and level == 1 then
          listOfEnemies = {Enemy(1,3,2),Enemy(2,4,2),Enemy(3,3,2),Enemy(4,3,1),Enemy(5,3,1),Enemy(6,3,1)}
-         print(listOfEnemies[2])
+
       elseif wave == 3 and level == 1 then
          listOfEnemies = {Enemy(3,3,2),Enemy(3,4,2),Enemy(1,3,2),Enemy(2,4,2),Enemy(5,3,2),Enemy(4,3,1),Enemy(6,3,1)}
       
       elseif wave == 1 and  level == 2 then
          listOfEnemies = {Enemy(3,3,3),Enemy(4,3,3),Enemy(5,3,3),Enemy(6,3,2),Enemy(6,4,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2)}
       
+      elseif wave == 2 and  level == 2 then
+         listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,4,2),Enemy(4,3,3)}
+
          elseif wave == 3 and  level == 2 then
          listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,4,2),Enemy(4,3,3)}
 
@@ -328,6 +250,16 @@ function waveSwitcher()
 
          elseif wave == 3 and  level == 3 then
          listOfEnemies = {Enemy(3,3,3),Enemy(3,4,3),Enemy(5,3,3),Enemy(4,3,2),Enemy(6,3,2),Enemy(7,3,2),Enemy(7,4,2),Enemy(8,3,2)}
+         
+      elseif wave == 1 and  level == 4 then
+         listOfEnemies = {Enemy(2,2,2)}--,Enemy(4,3,3),Enemy(5,3,3),Enemy(6,3,2),Enemy(6,4,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2)}
+      
+         elseif wave == 2 and  level == 4 then
+         listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,4,2),Enemy(4,3,3)}
+
+         elseif wave == 3 and  level == 4 then
+         listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,3)}
+
          end
 
          --resets targets to 0 to avoid any un-reset towers
@@ -354,6 +286,8 @@ function levelSwitch()
    --resets wave to 0, first wave is always the same test wave
    wave = 0
    level = level + 1
+   tiledn = {}
+   tiledn = Level(level)
    --initiates the new level
    love.load()
 end
