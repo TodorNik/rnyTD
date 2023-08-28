@@ -11,6 +11,7 @@ function Enemy:new(a, b, c)
     self.waypoint = 1
     self.type = c
     self.reward = 20 * c
+    self.orientation = 1
 end
 
 function Enemy:update (dt)
@@ -23,22 +24,22 @@ function Enemy:update (dt)
         if self.y < self.targetY then
             self.y = self.y + self.speed
         end
+
+        if self.targetY > self.y then
+            self.orientation = 1
+        end
 end
 
 function Enemy:draw()
-    --draws the enemy based on their  type
-    tileSize = 25
     if self.type == 1 then
-        local enemySize = 10 -- The size of the enemy
-        local offsetX = (tileSize - enemySize) / 2
-        local offsetY = (tileSize - enemySize) / 2
-        love.graphics.circle("line", self.x * tileSize + offsetX, self.y * tileSize + offsetY, enemySize)
+        eimg = love.graphics.newImage("enemy1.png")
+        love.graphics.draw(eimg, self.x * 25, self.y * 25, 0, 0.4, 0.4)
     elseif self.type == 2 then
-        love.graphics.rectangle("line", self.x * 25, self.y * 25 , 20, 20)
+        eimg = love.graphics.newImage("enemy2.png")
+        love.graphics.draw(eimg, self.x * 25, self.y * 25, 0, 0.4, 0.4)
     elseif self.type == 3 then
-        love.graphics.circle("fill", self.x * 25, self.y * 25, 20)
-    elseif self.type == 4 then
-        love.graphics.rectangle("fill", self.x * 25, self.y * 25, 20, 20)
+        eimg = love.graphics.newImage("enemy3.png")
+        love.graphics.draw(eimg, self.x * 25, self.y * 25, 0, 0.4, 0.4)
     end
 end
 
