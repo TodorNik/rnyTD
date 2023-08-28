@@ -5,6 +5,11 @@ money = 200
 sound = love.audio.newSource("pop.ogg", "static")
 
 function love.load()
+   if level == 6 then
+      listOfEnemies = {}
+      listOfTowers = {}
+      print("well done, you beat the game you SOB hahaha jk its ok i appreciate you")
+   else
    --Imports parts of the jumper library by Yonaba (https://github.com/Yonaba/Jumper/blob/master/README.md)
    Grid = require ("jumper.grid") -- The grid class
    Pathfinder = require ("jumper.pathfinder") -- The pathfinder class
@@ -16,7 +21,7 @@ function love.load()
    tiled = Level(level)
    tilemap = tiled:convertTilemap(tiled.tilemap)
    for i,tile in ipairs(tilemap) do
-      print(tile[i])      
+      print(tile[i])   
    end
    --Initializes enemy and tower lists
    listOfEnemies = {Enemy(1,3,1), Enemy(2,3,1),Enemy(3,3,1),Enemy(4,3,1)}
@@ -26,7 +31,7 @@ function love.load()
       -- Creates a grid object
       grid = Grid(tilemap)
       --Creates a pathfinder object using Jump Point Search
-      myFinder = Pathfinder(grid, 'BFS', walkable)
+      myFinder = Pathfinder(grid, 'DFS', walkable)
       --creates an end goal to defend from enemies
       goal ={
          x = tiled.endX * 25 + tiled.offsetX,
@@ -35,9 +40,13 @@ function love.load()
       }
       -- Calculates the path, and its length
       calculatePath()
+   end
 end
 
 function love.update(dt)
+if level == 6 then
+   print("lol")
+else
    --checks whether wave's been cleared
    if #(listOfEnemies) <= 0 then
       print(#(listOfEnemies))
@@ -57,11 +66,15 @@ function love.update(dt)
       enemy:update(dt)
       checkWaypoint(enemy,i)
    end
-   
+end
 
 end
 
 function love.draw()
+   if level == 6 then
+      love.graphics.print("You beat the game!", 300, 200)
+
+   else
    --draws the goal, its health, and current money
    love.graphics.setBackgroundColor( 0.7, 1, 0.4)
    gimg = love.graphics.newImage("goal.png")
@@ -70,7 +83,21 @@ function love.draw()
    love.graphics.draw(gimg, goal.x - 25, goal.y - 30)
    love.graphics.setColor(0,0,0)
    love.graphics.print ("3/ "..goal.health, goal.x - 6, goal.y - 7)
-   love.graphics.print ("Money "..money, 13, 9)
+   love.graphics.print ("Level: "..level,400,9)
+   love.graphics.print ("Money: "..money, 13, 9)
+
+   tOne = love.graphics.newImage("tower1.png")
+   tTwo = love.graphics.newImage("tower2.png")
+   tThree = love.graphics.newImage("tower3.png")
+
+   love.graphics.setColor(1,1,1)
+   love.graphics.draw(tOne, 70, 560, 0, 0.8, 0.8, 32, 54)
+   love.graphics.draw(tTwo, 300, 560, 0, 0.8, 0.8, 32, 54)
+   love.graphics.draw(tThree, 540, 560, 0, 0.8, 0.8, 32, 54)
+   love.graphics.setColor(0,0,0)
+   love.graphics.print ("L-Click: 100 Money ", 110,530,0,1.3,1.3)
+   love.graphics.print ("R-Click: 200 Money ", 340, 530, 0, 1.3, 1.3)
+   love.graphics.print ("Middle Click: 300 Money", 580, 530, 0, 1.3, 1.3)
 
    --draws enemies
    for g,v in ipairs(listOfEnemies) do
@@ -80,7 +107,7 @@ function love.draw()
    --draws towers
    for i,v in ipairs(listOfTowers) do
       love.graphics.setColor(1,1,1)
-      v:draw(-1)
+      v:draw()
    end
 
    for i=1,#tilemap do
@@ -103,6 +130,7 @@ function love.draw()
       end
    end
    Level:draw()
+   end
 end
    
 function checkWaypoint(e,eindx)
@@ -142,7 +170,7 @@ function love.mousepressed(x, y, button, istouch)
       --checks if player has enough money and which button is pressed to create a tower
       if button == 1 and money >= 100 then
          table.insert(listOfTowers, Tower(temp.a * 25,temp.b * 25, 1))
-         --money = money - 100
+         money = money - 100
          tilemap[temp.b][temp.a] = 2
       elseif button == 2 and money >= 200 then
          table.insert(listOfTowers, Tower(temp.a * 25, temp.b * 25, 2))
@@ -200,6 +228,13 @@ end
 function calculatePath()
    -- Calculates the path, and its length
    path, length = myFinder:getPath(tiled.startX, tiled.startY, tiled.endX, tiled.endY)
+
+   if path then
+      print(('Path found! Length: %.2f'):format(length))
+       for node, count in path:iter() do
+         print(('Step: %d - x: %d - y: %d'):format(count, node.x, node.y))
+       end
+    end
 end
 
 --after distance has been confirmed, target starts ticking off the timer and tower deals damage
@@ -251,14 +286,23 @@ function waveSwitcher()
          elseif wave == 3 and  level == 3 then
          listOfEnemies = {Enemy(3,3,3),Enemy(3,4,3),Enemy(5,3,3),Enemy(4,3,2),Enemy(6,3,2),Enemy(7,3,2),Enemy(7,4,2),Enemy(8,3,2)}
          
-      elseif wave == 1 and  level == 4 then
-         listOfEnemies = {Enemy(2,2,2)}--,Enemy(4,3,3),Enemy(5,3,3),Enemy(6,3,2),Enemy(6,4,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2)}
+         elseif wave == 1 and  level == 4 then
+         listOfEnemies = {Enemy(2,2,2),Enemy(4,2,3),Enemy(4,3,3),Enemy(5,3,3),Enemy(6,3,2),Enemy(6,4,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2)}
       
          elseif wave == 2 and  level == 4 then
-         listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,4,2),Enemy(4,3,3)}
+         listOfEnemies = {Enemy(3,3,3),Enemy(4,2,3),Enemy(4,2,3),Enemy(4,2,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,4,2),Enemy(4,3,3)}
 
          elseif wave == 3 and  level == 4 then
          listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,3)}
+
+      elseif wave == 1 and  level == 5 then
+         listOfEnemies = {Enemy(2,2,2),Enemy(4,3,3),Enemy(5,3,3),Enemy(6,3,2),Enemy(6,4,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,3,2),Enemy(5,3,3),Enemy(6,3,3)}
+      
+         elseif wave == 2 and  level == 5 then
+         listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,2),Enemy(3,3,2),Enemy(3,4,2),Enemy(4,3,3),Enemy(6,3,3),Enemy(6,4,3),Enemy(7,4,2)}
+
+         elseif wave == 3 and  level == 5 then
+         listOfEnemies = {Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,3),Enemy(3,3,3),Enemy(3,3,1),Enemy(3,3,1),Enemy(3,3,3),Enemy(3,3,3)}
 
          end
 
@@ -282,12 +326,17 @@ function levelSwitch()
    for i,t in ipairs(listOfTowers) do
       table.remove(listOfTowers,i)
    end
+   level = level + 1
 
    --resets wave to 0, first wave is always the same test wave
+   if level == 6 then
+      love.graphics.print("END OF GAME",40,40)
+   else
+
    wave = 0
-   level = level + 1
    tiledn = {}
    tiledn = Level(level)
    --initiates the new level
-   love.load()
+      love.load()
+   end
 end
