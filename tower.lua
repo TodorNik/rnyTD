@@ -5,7 +5,7 @@ function Tower:new(x,y,z)
     self.x = x
     self.y = y
     self.damage = 1
-    self.timer = 4 - (z * 0.6)
+    self.timer = 2 - (z * 0.6)
     self.currtimer = self.timer
     self.type = z
     self.range = 70 + (z * 5)
@@ -23,28 +23,18 @@ end
 
 
 function Tower:draw()
-    --draws the tower based on type provided
+
     if self.type == 1 then
-        love.graphics.setColor(0.8,0.4,1)
-        love.graphics.rectangle("fill",self.x, self.y, 25, 25)
+        img = love.graphics.newImage("tower1.png")
+        love.graphics.draw(img, self.x, self.y, 0, 0.4, 0.4)
         love.graphics.circle("line",self.x + 10, self.y + 10, self.range)
-        love.graphics.setColor(255,255,255)
-
     elseif self.type == 2 then
-        love.graphics.setColor(0.4,1,0.8)
-        love.graphics.rectangle("fill",self.x, self.y, 25, 25)
+        img = love.graphics.newImage("tower2.png")
+        love.graphics.draw(img, self.x, self.y, 0, 0.4, 0.4)
         love.graphics.circle("line",self.x + 10, self.y + 10, self.range)
-        love.graphics.setColor(255,255,255)
-
-
     elseif self.type == 3 then
-        love.graphics.setColor(1,0.4,0.8)
-        love.graphics.rectangle("fill",self.x, self.y, 25, 25)
+        img = love.graphics.newImage("tower3.png")
+        love.graphics.draw(img, self.x, self.y, 0, 0.4, 0.4)
         love.graphics.circle("line",self.x + 10, self.y + 10, self.range)
-        love.graphics.setColor(255,255,255)
     end
 end
-
-
-
-
