@@ -8,7 +8,7 @@ function love.load()
    if level == 6 then
       listOfEnemies = {}
       listOfTowers = {}
-      print("well done, you beat the game you SOB hahaha jk its ok i appreciate you")
+      
    else
    --Imports parts of the jumper library by Yonaba (https://github.com/Yonaba/Jumper/blob/master/README.md)
    Grid = require ("jumper.grid") -- The grid class
